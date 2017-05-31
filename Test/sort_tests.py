@@ -1,5 +1,7 @@
 import subprocess, unittest, os
 from shutil import copyfile
+from teamcity import is_running_under_teamcity
+from teamcity.unittestpy import TeamcityTestRunner
 
 def runTest(num):
       copyfile('input_test' + num + '.txt', 'input.txt')
@@ -29,4 +31,8 @@ class TestSortProgramm(unittest.TestCase):
       self.assertEqual(result, test_result)
       
 if __name__ == '__main__':
-    unittest.main()
+    if is_running_under_teamcity():
+        runner = TeamcityTestRunner()
+    else:
+        runner = unittest.TextTestRunner()
+    unittest.main(testRunner=runner)
